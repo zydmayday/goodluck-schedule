@@ -3,14 +3,29 @@ export interface User {
   lastName: string;
 }
 
+/**
+ * canvas的固有属性
+ */
 export interface CanvasMetaData {
   width: number;
   height: number;
 }
 
+/**
+ * 二叉树的固有属性
+ */
 export interface TreeMetaData {
+  /**
+   * 节点之间的宽度
+   */
   w: number;
+  /**
+   * 节点之间的高度
+   */
   h: number;
+  /**
+   * 节点的半径
+   */
   r: number;
   wMax: number;
   wMin: number;
@@ -18,27 +33,33 @@ export interface TreeMetaData {
   hMin: number;
 }
 
+/**
+ * 一般用于用户传入的json数据
+ */
 export class TreeData {
   val!: number;
   left?: TreeData;
   right?: TreeData;
 }
 
-export class TreeNode {
+/**
+ * canvas渲染二叉树时的数据结构
+ */
+export class CanvasTreeNode {
   val!: number;
-  left?: TreeNode;
-  right?: TreeNode;
+  left?: CanvasTreeNode;
+  right?: CanvasTreeNode;
   x = 0;
   y = 0;
   layer = 0; // root
 
-  constructor(val: number, left?: TreeNode, right?: TreeNode) {
+  constructor(val: number, left?: CanvasTreeNode, right?: CanvasTreeNode) {
     this.val = val;
     this.left = left;
     this.right = right;
   }
 
-  draw(ctx: CanvasRenderingContext2D, r: number, parent?: TreeNode) {
+  draw(ctx: CanvasRenderingContext2D, r: number, parent?: CanvasTreeNode) {
     ctx.textAlign = "center";
     ctx.fillText(this.val + "", this.x, this.y);
     ctx.beginPath();

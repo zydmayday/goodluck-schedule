@@ -10,7 +10,12 @@
 <script lang="ts">
 import "reflect-metadata";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { CanvasMetaData, TreeData, TreeMetaData, TreeNode } from "@/types";
+import {
+  CanvasMetaData,
+  TreeData,
+  TreeMetaData,
+  CanvasTreeNode
+} from "@/types";
 @Component
 export default class BinaryTreeCanvas extends Vue {
   @Prop()
@@ -36,13 +41,13 @@ export default class BinaryTreeCanvas extends Vue {
     };
   }
 
-  toNode(
+  private toNode(
     treeData: TreeData | undefined,
-    parent: TreeNode | undefined
-  ): TreeNode | undefined {
+    parent: CanvasTreeNode | undefined
+  ): CanvasTreeNode | undefined {
     let node;
     if (treeData) {
-      node = new TreeNode(treeData.val);
+      node = new CanvasTreeNode(treeData.val);
       node.left = this.toNode(treeData.left, node);
       node.right = this.toNode(treeData.right, node);
       if (parent) {
@@ -52,8 +57,8 @@ export default class BinaryTreeCanvas extends Vue {
     return node;
   }
 
-  calculateNodePosition(
-    node: TreeNode | undefined,
+  private calculateNodePosition(
+    node: CanvasTreeNode | undefined,
     x: number,
     y: number
   ): void {
@@ -73,7 +78,7 @@ export default class BinaryTreeCanvas extends Vue {
     }
   }
 
-  draw() {
+  private draw() {
     const rootNode = this.toNode(this.treeData, undefined);
     this.calculateNodePosition(
       rootNode,
@@ -102,6 +107,5 @@ export default class BinaryTreeCanvas extends Vue {
 <style scoped>
 .canvas {
   border: 1px solid #000;
-  width: 200px;
 }
 </style>

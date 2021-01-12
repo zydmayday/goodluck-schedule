@@ -1,27 +1,24 @@
 <template>
   <v-container>
-    <binary-tree-canvas
-      :canvasMetaData="metaData"
-      :treeData="treeData"
+    <binary-tree-canvas-panel
+      :canvasMetaData="canvasMetaData"
       :treeMetaData="treeMetaData"
+      :treeData="treeData"
     />
-    <binary-tree-canvas-controller :treeMetaData.sync="treeMetaData" />
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import BinaryTreeCanvas from "@/components/atoms/BinaryTreeCanvas.vue";
-import BinaryTreeCanvasController from "@/components/atoms/BinaryTreeCanvasController.vue";
+import BinaryTreeCanvasPanel from "@/components/organisms/BinaryTreeCanvasPanel.vue";
 import { CanvasMetaData, TreeData, TreeMetaData } from "@/types";
 @Component({
   components: {
-    BinaryTreeCanvas,
-    BinaryTreeCanvasController
+    BinaryTreeCanvasPanel
   }
 })
 export default class LearnCanvas extends Vue {
-  private metaData: CanvasMetaData = {
+  private canvasMetaData: CanvasMetaData = {
     width: 800,
     height: 400
   };
@@ -60,9 +57,9 @@ export default class LearnCanvas extends Vue {
     w: 50,
     h: 30,
     r: 10,
-    wMax: this.metaData.width / 2,
+    wMax: this.canvasMetaData.width / 2,
     wMin: 0,
-    hMax: this.metaData.height / 2,
+    hMax: this.canvasMetaData.height / 2,
     hMin: 0
   };
 }
