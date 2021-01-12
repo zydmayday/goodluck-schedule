@@ -54,9 +54,9 @@ export default class LearnCanvas extends Vue {
     }
   };
   private treeMetaData: TreeMetaData = {
-    w: 50,
-    h: 30,
-    r: 10,
+    w: 30,
+    h: 50,
+    r: 15,
     wMax: this.canvasMetaData.width / 2,
     wMin: 0,
     hMax: this.canvasMetaData.height / 2,

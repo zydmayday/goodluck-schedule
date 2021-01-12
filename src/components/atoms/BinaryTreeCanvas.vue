@@ -24,13 +24,13 @@ export default class BinaryTreeCanvas extends Vue {
   @Prop()
   private treeMetaData!: TreeMetaData;
 
+  @Prop()
+  private treeData!: TreeData;
+
   @Watch("treeMetaData", { immediate: true, deep: true })
   onTreeMetaDataChanged(): void {
     this.draw();
   }
-
-  @Prop()
-  private treeData!: TreeData;
 
   private ctx!: CanvasRenderingContext2D | null;
 
@@ -39,22 +39,6 @@ export default class BinaryTreeCanvas extends Vue {
       width: this.canvasMetaData.width + "px",
       height: this.canvasMetaData.height + "px"
     };
-  }
-
-  private toNode(
-    treeData: TreeData | undefined,
-    parent: CanvasTreeNode | undefined
-  ): CanvasTreeNode | undefined {
-    let node;
-    if (treeData) {
-      node = new CanvasTreeNode(treeData.val);
-      node.left = this.toNode(treeData.left, node);
-      node.right = this.toNode(treeData.right, node);
-      if (parent) {
-        parent.layer = Math.max(parent.layer, node.layer + 1);
-      }
-    }
-    return node;
   }
 
   private calculateNodePosition(
@@ -78,21 +62,25 @@ export default class BinaryTreeCanvas extends Vue {
     }
   }
 
+  private clearCtx(): void {
+    this.ctx?.clearRect(
+      0,
+      0,
+      this.canvasMetaData.width,
+      this.canvasMetaData.height
+    );
+  }
+
   private draw() {
-    const rootNode = this.toNode(this.treeData, undefined);
+    const rootNode = CanvasTreeNode.fromTreeData(this.treeData);
     this.calculateNodePosition(
       rootNode,
       this.canvasMetaData.width / 2,
       this.canvasMetaData.height / 8
     );
-    if (this.ctx && rootNode) {
-      this.ctx.clearRect(
-        0,
-        0,
-        this.canvasMetaData.width,
-        this.canvasMetaData.height
-      );
-      rootNode.draw(this.ctx, this.treeMetaData.r);
+    this.clearCtx();
+    if (this.ctx) {
+      rootNode?.draw(this.ctx, this.treeMetaData.r);
     }
   }
 

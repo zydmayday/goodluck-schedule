@@ -53,10 +53,25 @@ export class CanvasTreeNode {
   y = 0;
   layer = 0; // root
 
-  constructor(val: number, left?: CanvasTreeNode, right?: CanvasTreeNode) {
+  constructor(val = 0, left?: CanvasTreeNode, right?: CanvasTreeNode) {
     this.val = val;
     this.left = left;
     this.right = right;
+  }
+
+  static fromTreeData(
+    treeData?: TreeData,
+    parent?: CanvasTreeNode
+  ): CanvasTreeNode | undefined {
+    if (treeData) {
+      const node = new CanvasTreeNode(treeData?.val);
+      node.left = this.fromTreeData(treeData?.left, node);
+      node.right = this.fromTreeData(treeData?.right, node);
+      if (parent) {
+        parent.layer = Math.max(parent.layer, node.layer + 1);
+      }
+      return node;
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D, r: number, parent?: CanvasTreeNode) {
