@@ -40,6 +40,71 @@ export class TreeData {
   val!: number;
   left?: TreeData;
   right?: TreeData;
+  _size!: number;
+
+  constructor(
+    val: number,
+    left: TreeData | undefined,
+    right: TreeData | undefined
+  ) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+    this._size = 1;
+  }
+
+  private _insert(node: TreeData | undefined | null, val: number) {
+    if (!node) {
+      return new TreeData(val, undefined, undefined);
+    }
+    if (val <= node.val) {
+      node.left = this._insert(node.left, val);
+    } else {
+      node.right = this._insert(node.right, val);
+    }
+    return node;
+  }
+
+  private _isLeaf(): boolean {
+    return this.left == undefined && this.right == undefined;
+  }
+
+  private _maxDepth(node: TreeData | undefined): number {
+    if (!node) {
+      return 0;
+    }
+    if (node._isLeaf()) {
+      return 1;
+    }
+    return (
+      Math.max(this._maxDepth(node?.left), this._maxDepth(node?.right)) + 1
+    );
+  }
+
+  _minValue(node: TreeData): number {
+    if (!node.left) {
+      return node.val;
+    }
+    return this._minValue(node.left);
+  }
+
+  insert(val: number) {
+    this._size++;
+    return this._insert(this, val);
+  }
+
+  size(): number {
+    return this._size;
+  }
+
+  maxDepth(): number {
+    return this._maxDepth(this);
+  }
+
+  minValue(): number {
+    return this._minValue(this);
+  }
+
 }
 
 /**
@@ -87,13 +152,20 @@ export class CanvasTreeNode {
     this.right?.draw(ctx, r, this);
   }
 
-  private drawLine(ctx: CanvasRenderingContext2D, r: number, x1: number, y1: number, x2: number, y2: number) {
+  private drawLine(
+    ctx: CanvasRenderingContext2D,
+    r: number,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ) {
     ctx.beginPath();
     const deltaX = this.cosTheta(x1, y1, x2, y2);
     const deltaY = this.sinTheta(x1, y1, x2, y2);
     ctx.moveTo(x1 + r * deltaX, y1 - r * deltaY);
     ctx.lineTo(x2 - r * deltaX, y2 + r * deltaY);
-    ctx.stroke()
+    ctx.stroke();
   }
 
   private sinTheta(x1: number, y1: number, x2: number, y2: number) {

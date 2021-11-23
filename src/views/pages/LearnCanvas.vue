@@ -4,6 +4,7 @@
       :canvasMetaData="canvasMetaData"
       :treeMetaData="treeMetaData"
       :treeData="treeData"
+      @tree-insert="insert"
     />
   </v-container>
 </template>
@@ -14,45 +15,16 @@ import BinaryTreeCanvasPanel from "@/components/organisms/BinaryTreeCanvasPanel.
 import { CanvasMetaData, TreeData, TreeMetaData } from "@/types";
 @Component({
   components: {
-    BinaryTreeCanvasPanel
-  }
+    BinaryTreeCanvasPanel,
+  },
 })
 export default class LearnCanvas extends Vue {
   private canvasMetaData: CanvasMetaData = {
     width: 800,
-    height: 400
+    height: 400,
   };
 
-  private treeData: TreeData = {
-    val: 4,
-    left: {
-      val: 2,
-      left: {
-        val: 1
-      },
-      right: {
-        val: 3
-      }
-    },
-    right: {
-      val: 6,
-      left: {
-        val: 5,
-        left: {
-          val: 4.5,
-          left: {
-            val: 4.2
-          }
-        },
-        right: {
-          val: 5.5
-        }
-      },
-      right: {
-        val: 7
-      }
-    }
-  };
+  private treeData: TreeData = new TreeData(10, undefined, undefined);
   private treeMetaData: TreeMetaData = {
     w: 30,
     h: 50,
@@ -60,7 +32,11 @@ export default class LearnCanvas extends Vue {
     wMax: this.canvasMetaData.width / 2,
     wMin: 0,
     hMax: this.canvasMetaData.height / 2,
-    hMin: 0
+    hMin: 0,
   };
+
+  private insert(value: number) {
+    this.treeData.insert(value);
+  }
 }
 </script>

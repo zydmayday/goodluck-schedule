@@ -1,35 +1,48 @@
 <template>
   <v-row>
+    <v-col md="6">
+      <v-text-field v-model="localNewValue"> </v-text-field>
+    </v-col>
+    <v-col md="6">
+      <v-btn @click="insert">INSERT</v-btn>
+    </v-col>
     <v-col md="12">
-      <v-slider
-        :max="treeMetaData.wMax"
-        :min="treeMetaData.wMin"
-        v-model="treeMetaData.w"
-        label="width"
-        thumb-label="always"
-      ></v-slider>
-      <v-slider
-        :max="treeMetaData.hMax"
-        :min="treeMetaData.hMin"
-        v-model="treeMetaData.h"
-        label="height"
-        thumb-label="always"
-      ></v-slider>
-      <v-slider
-        v-model="treeMetaData.r"
-        label="radius"
-        thumb-label="always"
-      ></v-slider>
+      <span> Tree size: {{ treeSize }} </span>
+    </v-col>
+    <v-col md="12">
+      <span> Tree max depth: {{ treeMaxDepth }} </span>
+    </v-col>
+    <v-col md="12">
+      <span> Tree min value: {{ treeMinValue }} </span>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
-import { TreeMetaData } from "@/types";
-import { Component, PropSync, Vue } from "vue-property-decorator";
+import { TreeData } from "@/types";
+import { Component, Vue, Emit, Prop } from "vue-property-decorator";
 @Component
 export default class BinaryTreeCanvasController extends Vue {
-  @PropSync("treeMetaData")
-  private syncTreeMetaData!: TreeMetaData;
+  @Prop()
+  private treeData!: TreeData;
+
+  private get treeSize(): number {
+    return this.treeData.size();
+  }
+
+  private get treeMaxDepth(): number {
+    return this.treeData.maxDepth();
+  }
+
+  private get treeMinValue(): number {
+    return this.treeData.minValue();
+  }
+
+  private localNewValue = 10;
+
+  @Emit("tree-insert")
+  private insert() {
+    return this.localNewValue;
+  }
 }
 </script>

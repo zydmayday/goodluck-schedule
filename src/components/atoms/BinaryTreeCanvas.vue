@@ -32,6 +32,11 @@ export default class BinaryTreeCanvas extends Vue {
     this.draw();
   }
 
+  @Watch("treeData", { immediate: true, deep: true })
+  onTreeDataChanged(): void {
+    this.draw();
+  }
+
   private ctx!: CanvasRenderingContext2D | null;
 
   get canvasStyle() {
