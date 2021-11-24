@@ -20,7 +20,6 @@
         label="radius"
         thumb-label="always"
       ></v-slider>
-      <v-text-field v-model="newValue"> </v-text-field>
     </v-col>
   </v-row>
 </template>

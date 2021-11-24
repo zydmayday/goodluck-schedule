@@ -1,3 +1,5 @@
+import * as R from "ramda";
+
 export interface User {
   firstName: string;
   lastName: string;
@@ -44,8 +46,8 @@ export class TreeData {
 
   constructor(
     val: number,
-    left: TreeData | undefined,
-    right: TreeData | undefined
+    left: TreeData | undefined = undefined,
+    right: TreeData | undefined = undefined
   ) {
     this.val = val;
     this.left = left;
@@ -81,11 +83,58 @@ export class TreeData {
     );
   }
 
-  _minValue(node: TreeData): number {
+  private _minValue(node: TreeData): number {
     if (!node.left) {
       return node.val;
     }
     return this._minValue(node.left);
+  }
+
+  private _hasPathSum(node: TreeData | undefined, sum: number): boolean {
+    if (!node) {
+      return false;
+    }
+    if (node._isLeaf()) {
+      return node.val == sum;
+    }
+    return (
+      this._hasPathSum(node.left, sum - node.val) ||
+      this._hasPathSum(node.right, sum - node.val)
+    );
+  }
+
+  private _printPaths(node: TreeData | undefined): number[][] {
+    if (!node) {
+      return [];
+    }
+    if (node._isLeaf()) {
+      return [[node.val]];
+    }
+    const leftPaths = this._printPaths(node.left);
+    const rightPaths = this._printPaths(node.right);
+    const paths = [];
+    for (const path of R.concat(leftPaths, rightPaths)) {
+      paths.push(R.prepend(node.val, path));
+    }
+    return paths;
+  }
+
+  private _mirror(node: TreeData): TreeData {
+    if (node._isLeaf()) {
+      return node;
+    }
+    const left = node.right ? node._mirror(node.right) : undefined;
+    node.right = node.left ? node._mirror(node.left) : undefined;
+    node.left = left;
+    return node;
+  }
+
+  private _double(node: TreeData): TreeData {
+    const copy = new TreeData(node.val);
+    copy.left = node.left ? this._double(node.left) : undefined;
+    node.left = copy;
+    node.right = node.right ? this._double(node.right) : undefined;
+    return node;
   }
 
   insert(val: number) {
@@ -105,6 +154,21 @@ export class TreeData {
     return this._minValue(this);
   }
 
+  hasPathSum(sum: number) {
+    return this._hasPathSum(this, sum);
+  }
+
+  printPaths() {
+    return this._printPaths(this);
+  }
+
+  mirror() {
+    return this._mirror(this);
+  }
+
+  doubleTree() {
+    return this._double(this);
+  }
 }
 
 /**
