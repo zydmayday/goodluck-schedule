@@ -97,17 +97,14 @@ export class TreeData {
     return this._maxValue(node.right);
   }
 
-  private _hasPathSum(node: TreeData | undefined, sum: number): boolean {
-    if (!node) {
-      return false;
-    }
+  private _sum(node: TreeData): number {
     if (node._isLeaf()) {
-      return node.val == sum;
+      return node.val;
     }
-    return (
-      this._hasPathSum(node.left, sum - node.val) ||
-      this._hasPathSum(node.right, sum - node.val)
-    );
+    let sum = node.val;
+    sum += node.left ? this._sum(node.left) : 0;
+    sum += node.right ? this._sum(node.right) : 0;
+    return sum;
   }
 
   private _printPaths(node: TreeData | undefined): number[][] {
@@ -182,7 +179,7 @@ export class TreeData {
   }
 
   hasPathSum(sum: number) {
-    return this._hasPathSum(this, sum);
+    return this._sum(this) === sum;
   }
 
   printPaths() {
