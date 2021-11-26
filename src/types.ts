@@ -90,6 +90,13 @@ export class TreeData {
     return this._minValue(node.left);
   }
 
+  private _maxValue(node: TreeData): number {
+    if (!node.right) {
+      return node.val;
+    }
+    return this._maxValue(node.right);
+  }
+
   private _hasPathSum(node: TreeData | undefined, sum: number): boolean {
     if (!node) {
       return false;
@@ -137,6 +144,22 @@ export class TreeData {
     return node;
   }
 
+  private _isBST(node: TreeData): boolean {
+    if (node._isLeaf()) {
+      return true;
+    }
+    if (node.left && node.val < node.left.maxValue()) {
+      return false;
+    }
+    if (node.right && node.val >= node.right.minValue()) {
+      return false;
+    }
+    return (
+      (node.left ? node.left.isBST() : true) &&
+      (node.right ? node.right.isBST() : true)
+    );
+  }
+
   insert(val: number) {
     this._size++;
     return this._insert(this, val);
@@ -154,6 +177,10 @@ export class TreeData {
     return this._minValue(this);
   }
 
+  maxValue(): number {
+    return this._maxValue(this);
+  }
+
   hasPathSum(sum: number) {
     return this._hasPathSum(this, sum);
   }
@@ -168,6 +195,10 @@ export class TreeData {
 
   doubleTree() {
     return this._double(this);
+  }
+
+  isBST(): boolean {
+    return this._isBST(this);
   }
 }
 
